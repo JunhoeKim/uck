@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "downlevelIteration": true,
+        "sourceMap": true,
+        "outDir": "dist",
+        "lib": ["es2017", "dom"],
+    },
+    "include": [
+        "src/**/*.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "src/*.spec.ts",
+    ]
+}

@@ -1,0 +1,27 @@
+{
+  "name": "d3-korean",
+  "version": "1.0.0",
+  "description": "Utility module for applying korean to d3",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JunhoeKim/d3-korean.git"
+  },
+  "keywords": [
+    "d3",
+    "d3-module",
+    "korean"
+  ],
+  "author": "JunhoeKim",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JunhoeKim/d3-korean/issues"
+  },
+  "homepage": "https://github.com/JunhoeKim/d3-korean#readme",
+  "devDependencies": {
+    "typescript": "^3.2.4"
+  }
+}
