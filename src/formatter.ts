@@ -30,14 +30,14 @@ class Formatter {
 
         switch (type) {
             case 'b':
-                format = this.basicFormat(digits);
+                format = this.addSuffix(digits);
                 break;
             case 'b+':
-                format = this.basicFormat(digits);
-                format = this.applySubSuffix(format);
+                format = this.addSuffix(digits);
+                format = this.addSubSuffix(format);
                 break;
             default:
-                format = this.basicFormat(digits);
+                format = this.addSuffix(digits);
                 break;
         }
 
@@ -58,7 +58,7 @@ class Formatter {
      * 기본 type b, b+에서 사용되는 formatting,
      * 일반 숫자에 한글을 붙여준다.
      */
-    private basicFormat(digits: string) {
+    private addSuffix(digits: string) {
         let result = '';
 
         // 정수 부분 값이 10 미만이라면 아무것도 안한 결과를 뱉음
@@ -92,9 +92,11 @@ class Formatter {
      */
     private applyPrecision(value: number, precision: number) {
         precision = Math.max(0, Math.min(20, precision));
-        const digitCount = value.toString().length;
-        if (precision > digitCount) {
-            return value.toString() + '.' + '0'.repeat(precision - digitCount);
+        const digitLength = value.toString().replace('.', '').length;
+        if (precision > digitLength) {
+            return value.toString() 
+                + (value.toString().includes('.') ? '' : '.')
+                + '0'.repeat(precision - digitLength);
         } else {
             const precisionValue = Math.pow(10, precision);
             return (Math.round(value / precisionValue) * precisionValue).toString();
@@ -110,10 +112,10 @@ class Formatter {
     }
 
     /**
-     * SubSuffix를 기본 format에 적용한다.
+     * SubSuffix를 기본 format에 더한다.
      * @param format: 현재까지 processing 된 format string
      */
-    private applySubSuffix(format: string): string {
+    private addSubSuffix(format: string): string {
         const suffixes = ['', '십', '백', '천'];
         let startIndex = 0;
         let endIndex = 0;

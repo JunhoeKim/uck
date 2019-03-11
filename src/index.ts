@@ -5,6 +5,7 @@ export { default as specifier } from './specifiler';
 import { default as format } from './formatter';
 
 console.log(12345678, '', format('')(12345678));
+console.log(123.456, '', format('')(123.456));
 console.log(12345678, '.4', format('.4')(12345678));
 console.log(100, '.2', format('.2')(100));
 console.log(12480, '$.2', format('$.2')(12480))
