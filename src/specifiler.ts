@@ -1,16 +1,24 @@
 /**
  * 
- * The general form of a specifier is:
+ * Specifier가 감지하는 form은 아래와 같다:
  * 
- * [align][width][,][$][.precision][~][s][type]
+ * [align][width][,][$][.precision][s][~][type]
  *
- * s: space between types
- * The available type values are:
+ * align: 만들어진 format의 정렬 (<: 왼쪽, ^: 가운데, >: 오른쪽 정렬)
+ * width: 만들어진 foramt이 차지하는 총 width, 만약 결과 format이 이 입력값보다 크면
+ * width값은 무시된다.
+ * ,: 천 자리마다 ,를 찍는다.
+ * $: 숫자 뒤에 원을 붙인다.
+ * precision: 유효숫자를 정한다.
+ * ~: 의미없는 0 padding을 제거해준다.
+ * s: 각 suffix마다 space를 만들지 말지를 선택한다.
+ * type: formatting 타입이다.
+ * 가능한 type의 종류는 다음과 같다.:
  * 
- *  b: basic suffix notation.
- *  b+: basic suffix notation using combination of available suffixes.
- *  k: korean notation without digits.
- *  f[suffix]: fixed suffix notation.
+ *  b: 가장 기본적인 type. ex) 1230000 => 123만
+ *  b+: 가장 기본적인 type에서 십, 백, 천 단위의 suffix를 추가 ex) 1230000 => 1백2십3만.
+ *  k: digits가 없는 순수 한글 format. ex) 1230000 => 백이십삼만
+ *  f[suffix]: 단위 suffix를 하나로 고정시킨다. ex) format('~f천')(1230000) => 1230천
  *  
  */
 
