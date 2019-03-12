@@ -13,6 +13,11 @@ describe('A suite to check wheter the formatter works valid or not', () => {
     });
 
     it('The result should be equal to expected results', () => {
+        const result = d3.format('')(-123456780000);
+        expect(result).toBe('-1234억5678만');
+    });
+
+    it('The result should be equal to expected results', () => {
         const result = d3.format('')(2);
         expect(result).toBe('2.00000000000');
     });

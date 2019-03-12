@@ -43,7 +43,13 @@ class Formatter {
     format(value: number): string {
         let { align, width, comma, currency, precision, spacing, trim, type } = new FormatSpecifier(this.locale);
         // console.log({ align, width, comma, currency, precision, spacing, trim, type });
+        let positive = value >= 0;
         let roundedFormat = this.applyPrecision(value, precision);
+
+        if (!positive) {
+            roundedFormat = roundedFormat.substring(1);
+        }
+
         let [digits, decimal] = roundedFormat.split('.');
         decimal = decimal || '';
         let format = '';
@@ -82,6 +88,10 @@ class Formatter {
 
         if (currency) {
             format = format + '원';
+        }
+
+        if (!positive) {
+            format = '-' + format;
         }
 
         if (width && width > format.length) {
