@@ -44,7 +44,7 @@ export default class FormatSpecifier {
         this.width = match[2] && +match[2];
         this.comma = !!match[3];
         this.currency = !!match[4];
-        this.precision = match[5] ? +match[5].slice(1) : 12;
+        this.precision = match[5] && +match[5].slice(1);
         this.spacing = !!match[6];
         this.trim = !!match[7];
         this.type = match[8] || "b";

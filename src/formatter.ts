@@ -30,7 +30,7 @@ const digitToKorean: { [key: string]: string } = {
     '9': '구',
 }
 
-const totalSuffixToValue = {...baseSuffixToValue, ...subSuffixToValue};
+const totalSuffixToValue = { ...baseSuffixToValue, ...subSuffixToValue };
 
 class Formatter {
 
@@ -44,6 +44,7 @@ class Formatter {
         let { align, width, comma, currency, precision, spacing, trim, type } = new FormatSpecifier(this.locale);
         // console.log({ align, width, comma, currency, precision, spacing, trim, type });
         let positive = value >= 0;
+
         let roundedFormat = this.applyPrecision(value, precision);
 
         if (!positive) {
@@ -68,23 +69,24 @@ class Formatter {
                 format = this.convertToKorean(format);
                 break;
             default:
-                format = this.fixBaseSuffix(digits, type.substring(1));
+                format = this.fixBaseSuffix(digits, decimal, type.substring(1));
                 break;
         }
 
-        if (spacing) {
-            format = this.applySpacing(format);
+        if (!isFixType(type)) {
+            if (spacing) {
+                format = this.applySpacing(format);
+            }
+
+            if (trim) {
+                decimal = this.trimDecimal(decimal);
+            }
+            format = format + (decimal ? '.' + decimal : '');
         }
 
         if (comma) {
             format = this.addComma(format);
         }
-
-        if (trim) {
-            decimal = this.trimDecimal(decimal);
-        }
-
-        format = format + (decimal ? '.' + decimal : '');
 
         if (currency) {
             format = format + '원';
@@ -170,15 +172,18 @@ class Formatter {
      * @param format 현재까지 processing 된 format string
      * @param base 기준이 되는 숫자 한글 단위
      */
-    private fixBaseSuffix(format: string, base: string): string {
-        const baseValue = totalSuffixToValue[base];
-        const valueByBase = parseFloat(format) / baseValue;
-        if (valueByBase == 0) {
-            return '0' + base;
+    private fixBaseSuffix(digits: string, decimal: string, base: string): string {
+        const baseDigitLength = getDigitLength(totalSuffixToValue[base]);
+        const digitLength = getDigitLength(+digits);
+        if (baseDigitLength > digitLength) {
+            const trimmedDecimal = this.trimDecimal('0'.repeat(baseDigitLength - digitLength - 1) + digits + decimal);
+            return trimmedDecimal ? '0.' + trimmedDecimal + base : 0 + base;
+        } else {
+            const pointIndex = digitLength - baseDigitLength + 1;
+            const trimmedDecimal = this.trimDecimal(digits.substring(pointIndex) + decimal);
+            return digits.substring(0, pointIndex) + (trimmedDecimal ? '.' + trimmedDecimal : '') + base;
         }
-        const decimalLength = Math.max(0, -Math.floor(Math.log10(valueByBase)))
-        return valueByBase.toFixed(decimalLength) + base;
-    } 
+    }
 
     /**
      * Precision에 따라 반올림을 하거나 소수 점을 붙여서 string으로 바꿔준다.
@@ -186,8 +191,11 @@ class Formatter {
      * @param precision precision을 적용할 자릿 수
      */
     private applyPrecision(value: number, precision: number) {
-        precision = precision.clamp(0, 20);
         const digitLength = value.toString().replace('.', '').length;
+        if (!precision) {
+            precision = digitLength;
+        }
+        precision = precision.clamp(0, 20);
         if (precision > digitLength) {
             return value.toString()
                 + (value.toString().includes('.') ? '' : '.')
@@ -212,6 +220,8 @@ class Formatter {
      */
     private addComma(format: string): string {
         let offset = 0;
+        let endIndex = [...format].findIndex(c => c === '.') - 1;
+        endIndex = endIndex === -1 ? format.length : endIndex;
         for (let i = format.length; i >= 0; i--) {
             offset = isDigit(format[i]) ? offset + 1 : 0;
             if (offset === 4) {
@@ -246,7 +256,7 @@ class Formatter {
                 return ' '.repeat(width - format.length) + format;
             case '^':
                 const leftMargin = Math.round((width - format.length) / 2);
-                const rightMargin = width - format.length - leftMargin; 
+                const rightMargin = width - format.length - leftMargin;
                 return ' '.repeat(leftMargin) + format + ' '.repeat(rightMargin);
             case '<':
                 return format + ' '.repeat(width - format.length);
