@@ -1,7 +1,13 @@
 import { default as FormatSpecifier } from './specifiler';
 import { default as parse } from './parser';
 
-const suffixToValue : { [key: string]: number }= {
+const subSuffixToValue: { [key: string]: number } = {
+    '십': 10,
+    '백': 100,
+    '천': 1000,
+}
+
+const baseSuffixToValue: { [key: string]: number } = {
     '': 1,
     '만': 10000,
     '억': 10e8,
@@ -36,8 +42,10 @@ class Formatter {
                 format = this.addSuffix(digits);
                 format = this.addSubSuffix(format);
                 break;
-            default:
+            case 'k':
                 format = this.addSuffix(digits);
+            default:
+                format = this.fixBaseSuffix(digits, type.substring(1));
                 break;
         }
 
@@ -66,7 +74,7 @@ class Formatter {
             return digits;
         }
 
-        const suffixEntries = Object.entries(suffixToValue);
+        const suffixEntries = Object.entries(baseSuffixToValue);
 
         suffixEntries.forEach((pair, index) => {
             const [suffix, value] = pair;
@@ -135,6 +143,16 @@ class Formatter {
         });
         return result;
     }
+
+    /**
+     * 사용자가 정한 한글 숫자 단위에 맞춰서 format을 재구성한다.
+     * @param format: 현재까지 processing 된 format string
+     * @param base: 기준이 되는 숫자 한글 단위
+     */
+    private fixBaseSuffix(format: string, base: string): string {
+        const baseValue = {...baseSuffixToValue, ...subSuffixToValue}[base];
+        return (parseFloat(format) / baseValue).toString() + base;
+    } 
 }
 
 export default function (locale: string) {
