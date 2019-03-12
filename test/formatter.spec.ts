@@ -24,6 +24,7 @@ describe('A suite to check wheter the formatter works valid or not', () => {
     validate(1234567890, '.6sf천', '1234570천');
     validate(1230000, '~f천', '1230천');
     validate(1, '~f만', '0.0001만');
+    validate(-0.001, 'f백', '-0.00001백');
     validate(12345678900000000000000, 'sf해', '123.456789해');
     validate(1234567890, ',f천', '1,234,567.89천');
     validate(12345678, ',$.8', '1,234만5,678원');

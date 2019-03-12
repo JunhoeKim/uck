@@ -5,6 +5,9 @@ export function isDigit(c: string) {
 }
 
 export function getDigitLength(value: number) {
+    if (value === 0) {
+        return 1;
+    }
     return Math.floor(Math.log10(value)) + 1;
 }
 

@@ -191,7 +191,7 @@ class Formatter {
      * @param precision precision을 적용할 자릿 수
      */
     private applyPrecision(value: number, precision: number) {
-        const digitLength = value.toString().replace('.', '').length;
+        const digitLength = value.toString().replace(/(\.|-)/g, '').length;
         if (!precision) {
             precision = digitLength;
         }
@@ -200,6 +200,8 @@ class Formatter {
             return value.toString()
                 + (value.toString().includes('.') ? '' : '.')
                 + '0'.repeat(precision - digitLength);
+        } else if (precision === digitLength) {
+            return value.toString();
         } else {
             const precisionValue = Math.pow(10, digitLength - precision);
             return (Math.round(value / precisionValue) * precisionValue).toString();
