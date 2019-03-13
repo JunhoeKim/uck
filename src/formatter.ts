@@ -34,18 +34,22 @@ const totalSuffixToValue = { ...baseSuffixToValue, ...subSuffixToValue };
 
 class Formatter {
 
-    public locale: string = '';
+    public specifier: string = '';
 
-    constructor(locale: string) {
-        this.locale = locale;
+    constructor(specifier: string) {
+        this.specifier = specifier;
     }
 
     convert(value: number): string {
         return this.format(value);
     }
 
+    /**
+     * input value를 specifier맞춰서 formatting한다.
+     * @param value input value
+     */
     format(value: number): string {
-        let { align, width, comma, currency, precision, spacing, trim, type } = new FormatSpecifier(this.locale);
+        let { align, width, comma, currency, precision, spacing, trim, type } = new FormatSpecifier(this.specifier);
         // console.log({ align, width, comma, currency, precision, spacing, trim, type });
         let positive = value >= 0;
         value = Math.abs(value);
@@ -109,6 +113,7 @@ class Formatter {
     /**
      * 기본 type b, b+에서 사용되는 formatting,
      * 일반 숫자에 한글을 붙여준다.
+     * @param digits 정수 부분을 나타내는 숫자 문자열
      */
     private addSuffix(digits: string) {
         let result = '';
@@ -270,12 +275,12 @@ class Formatter {
     }
 }
 
-export function format(locale: string) {
-    const formatter = new Formatter(locale);
+export function format(specifier: string) {
+    const formatter = new Formatter(specifier);
     return formatter.format.bind(formatter);
 }
 
-export function convert(locale: string, value: number) {
-    const formatter = new Formatter(locale);
+export function convert(specifier: string, value: number) {
+    const formatter = new Formatter(specifier);
     return formatter.convert(value);
 }
