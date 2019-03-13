@@ -1,5 +1,5 @@
 import { default as FormatSpecifier } from './specifiler';
-import { isDigit, getDigitLength, isFixType } from './util';
+import { isDigit, getDigitLength, isFixType, rawString } from './util';
 
 const subSuffixToValue: { [key: string]: number } = {
     '십': 10,
@@ -40,17 +40,17 @@ class Formatter {
         this.locale = locale;
     }
 
+    convert(value: number): string {
+        return this.format(value);
+    }
+
     format(value: number): string {
         let { align, width, comma, currency, precision, spacing, trim, type } = new FormatSpecifier(this.locale);
         // console.log({ align, width, comma, currency, precision, spacing, trim, type });
         let positive = value >= 0;
+        value = Math.abs(value);
 
         let roundedFormat = this.applyPrecision(value, precision);
-
-        if (!positive) {
-            roundedFormat = roundedFormat.substring(1);
-        }
-
         let [digits, decimal] = roundedFormat.split('.');
         decimal = decimal || '';
         let format = '';
@@ -65,8 +65,11 @@ class Formatter {
                 break;
             case 'k':
                 format = this.addSuffix(digits);
+                console.log({format});
                 format = this.addSubSuffix(format);
+                console.log({format});
                 format = this.convertToKorean(format);
+                console.log({format});
                 break;
             default:
                 format = this.fixBaseSuffix(digits, decimal, type.substring(1));
@@ -164,7 +167,7 @@ class Formatter {
      * @param format 현재까지 process된 format
      */
     public convertToKorean(format: string): string {
-        return format.replace('1', '').replace(/([2-9])/g, (_, g) => digitToKorean[g]);
+        return format.replace(/1([십백천만억조경해자양])/g, (_, g) => g).replace(/([1-9])/g, (_, g) => digitToKorean[g]);
     }
 
     /**
@@ -191,20 +194,21 @@ class Formatter {
      * @param precision precision을 적용할 자릿 수
      */
     private applyPrecision(value: number, precision: number) {
-        const digitLength = value.toString().replace(/(\.|-)/g, '').length;
+        const digitLength = rawString(value).replace(/(\.|-)/g, '').length;
         if (!precision) {
             precision = digitLength;
         }
-        precision = precision.clamp(0, 20);
+        precision = Math.max(0, Math.min(20, precision));
         if (precision > digitLength) {
-            return value.toString()
-                + (value.toString().includes('.') ? '' : '.')
+            const result = rawString(value);
+            return result
+                + (result.includes('.') ? '' : '.')
                 + '0'.repeat(precision - digitLength);
         } else if (precision === digitLength) {
-            return value.toString();
+            return rawString(value);
         } else {
             const precisionValue = Math.pow(10, digitLength - precision);
-            return (Math.round(value / precisionValue) * precisionValue).toString();
+            return rawString(Math.round(value / precisionValue) * precisionValue);
         }
     }
 
@@ -266,7 +270,12 @@ class Formatter {
     }
 }
 
-export default function (locale: string) {
+export function format(locale: string) {
     const formatter = new Formatter(locale);
     return formatter.format.bind(formatter);
+}
+
+export function convert(locale: string, value: number) {
+    const formatter = new Formatter(locale);
+    return formatter.convert(value);
 }

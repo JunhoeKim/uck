@@ -5,7 +5,7 @@
  * [align][width][,][$][.precision][s][~][type]
  *
  * align: 만들어진 format의 정렬 (<: 왼쪽, ^: 가운데, >: 오른쪽 정렬)
- * width: 만들어진 foramt이 차지하는 총 width, 만약 결과 format이 이 입력값보다 크면
+ * width: 만들어진 format이 차지하는 총 width, 만약 결과 format이 이 입력값보다 크면
  * width값은 무시된다.
  * ,: 천 자리마다 ,를 찍는다.
  * $: 숫자 뒤에 원을 붙인다.

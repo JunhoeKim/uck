@@ -1,26 +1,27 @@
 {
-  "name": "d3-korean",
+  "name": "uck",
   "version": "1.0.0",
-  "description": "Utility module for applying korean to d3",
-  "main": "index.js",
+  "description": "Format numbers for Korean",
+  "main": "dist/index.js",
   "scripts": {
     "test": "karma start ./karma.conf.js --browsers Chrome"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JunhoeKim/d3-korean.git"
+    "url": "git+https://github.com/JunhoeKim/uck.git"
   },
   "keywords": [
-    "d3",
-    "d3-module",
-    "korean"
+    "formatter",
+    "korean",
+    "format",
+    "d3"
   ],
-  "author": "JunhoeKim",
+  "author": "Junhoe Kim",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/JunhoeKim/d3-korean/issues"
   },
-  "homepage": "https://github.com/JunhoeKim/d3-korean#readme",
+  "homepage": "https://github.com/JunhoeKim/uck#readme",
   "devDependencies": {
     "@types/jasmine": "^3.3.9",
     "@types/karma": "^3.0.2",

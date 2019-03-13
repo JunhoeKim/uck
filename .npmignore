@@ -1,0 +1,7 @@
+.DS_store
+.git*
+docs/
+examples/
+test/
+src/
+.editorconfig

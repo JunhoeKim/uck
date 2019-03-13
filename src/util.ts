@@ -1,5 +1,3 @@
-import { isNumber } from "util";
-
 export function isDigit(c: string) {
     return !isNaN(parseInt(c));
 }
@@ -15,18 +13,6 @@ export function isFixType(type: string) {
     return type[0] === 'f';
 }
 
-declare global {
-    interface Number {
-        toString(): string;
-        clamp(min: number, max: number): number;
-    }
+export function rawString(value: number) {
+    return value.toLocaleString('fullwide', { useGrouping: false });
 }
-
-Number.prototype.toString = function(radix?: number): string {
-    return this.toLocaleString('fullwide', { useGrouping: false });
-} 
-
-Number.prototype.clamp = function(min: number, max: number): number {
-    return Math.max(min, Math.min(max, this)); 
-}
-
