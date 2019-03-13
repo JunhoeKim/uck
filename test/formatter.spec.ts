@@ -47,5 +47,6 @@ describe('A suite to check wheter the formatter works valid or not', () => {
     validateFormat(12345, '^12,$.3', '  1만2,300원  ');
     validateFormat(-54321, 'k', '-오만사천삼백이십일');
     validateFormat(12345, '^12,$.3k', '   만이천삼백원   ');
+    validateFormat(40000000, 'b+', '4천만')
 
 });

@@ -50,7 +50,6 @@ class Formatter {
      */
     format(value: number): string {
         let { align, width, comma, currency, precision, spacing, trim, type } = new FormatSpecifier(this.specifier);
-        // console.log({ align, width, comma, currency, precision, spacing, trim, type });
         let positive = value >= 0;
         value = Math.abs(value);
 
@@ -69,11 +68,8 @@ class Formatter {
                 break;
             case 'k':
                 format = this.addSuffix(digits);
-                console.log({format});
                 format = this.addSubSuffix(format);
-                console.log({format});
                 format = this.convertToKorean(format);
-                console.log({format});
                 break;
             default:
                 format = this.fixBaseSuffix(digits, decimal, type.substring(1));
